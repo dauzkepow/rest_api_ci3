@@ -1,0 +1,371 @@
+#1 - APA Itu API
+API = kumpulan fungsi yang dapat dipanggil aplikasi lain
+
+mysqli, PDO = API php konek ke database
+
+$this->db->get('mahasiswa') = API CI ambil data ke database
+
+
+WEB API = WEB Service:
+sistem perangkat linak untuk mendukung interaksi dua atau lebih aplikasi melalui jaringan http protokol
+
+web, mobile, cloud, aplikasi lain ---- REST API ---- database
+
+REST API
+JSON
+
+
+
+#2 - Rest dan HTTP
+API = penghubung user dan server = pelayan
+Rest API = aturannya = menu makanan
+request = bisa web, mobile, cloud, aplikasi lain = pengunjung
+response = server = dapur
+JSON = data = makanan
+
+Protokol yang digunakan selalu HTTP
+bisa interaksi antar mesin
+
+URL = alamat resource yang dapat diakses dari internet
+
+#Kalau pakai code igniter aplikasi web biasa :
+User ====> Server + Mysql
+GET		= mengirimkan request, menerima respon
+POST	= mengirimkan request beserta data di dalam form, menerima respon
+PUT		= xxxxxx
+DELETE	= xxxxxx
+
+#mengambil seluruh data mahasiswa = GET
+CI APP =  localhost/ci-app/mahasiswa/    = server mysql
+
+#mengambil detail mahasiswa yang id 12 = GET
+CI APP =  localhost/ci-app/mahasiswa/detail/12   = server mysql
+
+#tambah data mahasiswa baru lewat form = POST
+CI APP =  localhost/ci-app/mahasiswa/tambah    = server mysql
+
+#hapus data mahasiswa id 3 = GET
+CI APP =  localhost/ci-app/mahasiswa/hapus/3    = server mysql
+
+#Ubah data mahasiswa id 38 = POST
+CI APP =  localhost/ci-app/mahasiswa/ubah/38    = server mysql
+
+
+#Kalau pakai REST API :
+Rest Client =====> Rest Server
+
+HTTP Method / Verbs
+- RESTFULL API -
+GET		= mengambil data
+POST	= menambah data
+PUT		= mengubah data (tidak bisa menggunakan browser)
+DELETE	= menghapus data (tidak bisa menggunakan browser)
+
+|-------Rest Client---------|
+|User ===> Server(Traveloka)| =====> Rest Server(KAI)
+|---------------------------|
+
+|-------Rest Client---------|
+|Aplikasi mobile 			| =====> Rest Server(KAI)
+|---------------------------|
+
+|-------Rest Client---------|
+|Website Traveloka	 		| =====> Rest Server(KAI)
+|---------------------------|
+
+
+1. User kirim request beserta data jika ada ke Server(Traveloka)
+2. Server(Traveloka) / Rest Client mengirimkan request dan mengubah data jadi JSON ke Rest Server(KAI)
+3. Server(Traveloka) / Rest Client menerima respon dari Rest Server(KAI) berupa JSON beserta kode status
+4. Server(Traveloka) / Rest Client mengubah respon menjadi html ke User
+
+Rest Client => web, mobile, cloud, aplikasi dll
+
+kode status :
+200 - sukses
+404 - not found
+500 - server error
+...
+
+ENDPOINTS API = localhost/ci-app/mahasiswa/
+
+
+# GET = mengambil seluruh data masiswa
+|-----------|							 	|-----------|
+|Rest Client| localhost/ci-app/mahasiswa/  	|Rest Server|
+|-----------|								|-----------|
+
+# GET = mengambil detail mahasiswa yang id 12
+|-----------|							 		|-----------|
+|Rest Client| localhost/ci-app/mahasiswa/12 	|Rest Server|
+|-----------|									|-----------|
+
+# POST = Tambah Data
+|-----------|							 	|-----------|
+|Rest Client| localhost/ci-app/mahasiswa/ 	|Rest Server|
+|-----------|								|-----------|
+
+# DELETE = hapus data mahasiswa yang id 3
+|-----------|							 		|-----------|
+|Rest Client| localhost/ci-app/mahasiswa/3	 	|Rest Server|
+|-----------|									|-----------|
+
+# PUT = Ubah data mahasiswa yang id 38
+|-----------|							 		|-----------|
+|Rest Client| localhost/ci-app/mahasiswa/38	 	|Rest Server|
+|-----------|									|-----------|
+
+
+Stateless :
+- setiap request dilakukan terisolasi
+- server tidak menyimpan sesi
+- setiap request dari client harus berisi informasi yang dibutuhkan server termasuk otentikasi
+
+Kesimpulan RESTFUL API :
+- pakai http method (GET, POST, PUT, DELETE)
+- endpoints menggunakan kata benda buka kata kerja
+localhost/ci-app/mahasiswa/
+
+localhost/ci-app/mahasiswa/tambah = tidak boleh
+- stateless
+
+
+#3 APA ITU JSON (Javascript Object Notation)
+format  pertukaran data antar aplikasi berisi key value
+bisa dibaca banyak bahasa permograman
+komsumsi api
+object = kumpulan property pasangan key value
+
+{ "key" : "value" }
+
+key = selalu dibungkus dengan " "
+value = sesuai tipe data
+
+
+format :
+array 2 object
+[
+	{
+		"nama" : "Kepo",
+		"umur" : 31,
+		"nomhs" : "337590847",
+		"lulus" : true,
+		"hobby" : [
+			"coding",
+			"sleep"
+		],
+		"pembimbing" : {
+			"pembimbing1" : "aaa",
+			"pembimbing2" : "bbb",
+		}
+	},
+	{
+		"nama" : "Bisma",
+		"umur" : 5,
+		"nomhs" : "3375908877",
+		"lulus" : true,
+		"hobby" : [
+			"coding",
+			"arsitek"
+		],
+		"pembimbing" : {
+			"pembimbing1" : "ccc",
+			"pembimbing2" : "ddd",
+		}
+	},
+	
+	
+]
+
+
+- chrome extention = JSONView
+JSON digenerate dari rest server
+
+json_encode() - ubah array -> json
+json_decode() - ubah json -> array
+
+akses json :
+- file_get_contents()
+
+----json_encode() / parsing json :
+ambil json, parsing jadi object
+
+$data = [
+	"a" => 1,
+	"b" => 2,
+	"c" => 3,
+];
+
+//coba var_dumb
+//var_dump($data);
+
+//ubah ke json 
+//echo json_encode($data);
+$hasil = json_encode($data);
+echo $hasil;
+
+//hasil
+//{"a":1, "b":2, "c":3}
+
+
+//praktek ambil dari database :
+database = phpdasar
+table = mahasiswa
+field = id, nomhs, nama, email, jurusan
+
+<?php
+
+//handler
+$dbh = new PDO('mysql:host=localhost;dbname=phpdasar', 'root', 'root');
+//konek database 
+$db = $dbh->prepare('SELECT * FROM mahasiswa');
+$db->execute();
+$mahasiswa = $db->fetchAll(PDO::FETCH_ASSOC);
+$data = json_encode($mahasiswa);
+echo $data;
+
+//buka browser - pastikan data muncul dalam bentuk JSON
+
+?>
+
+---json_decode() / membaca file json:
+
+teorinya
+//ambil data json dari file
+$contents = file_get_contents('data.json');
+//ubah standar encodingnya
+$contents = utf8_encode($contents);
+//ubah string json menjadi  array associative
+$results = json_decode($contents, true);
+
+praktek
+<?php
+	$data = file_get_contents('coba.json'); //bisa https://
+	$mahasiswa = json_decode($data, true);
+	
+	var_dump($mahasiswa); //buka browser - pastikan data tampil bentuk array
+	
+	//- study kasus cara menampilkan data pembimbing1
+	//masuk array index ke 0
+	//cari key pembimbing
+	//cari key pembimbing1
+	echo $mahasiswa[0]["pembimbing"]["pembimbing1"];
+
+?>
+
+
+
+=================
+{
+		"nama" : "Bisma",
+		"umur" : 5,
+		"nomhs" : "3375908877",
+		"lulus" : true,
+		"hobby" : [
+			"coding",
+			"arsitek"
+		],
+		"pembimbing" : {
+			"pembimbing1" : "ccc",
+			"pembimbing2" : "ddd",
+		}
+}
+	
+
+
+#4 Bekerja Dengan File JSON Manual
+rest server agar bisa diakses dari luar server
+
+config cors (cross origin resource sharing)
+Access-Control-Allow-Origin = di file .htaccess
+<IfModule mod_headers.c>
+	Header set Access-Control-Allow-Origin "*"
+</IfMoule>
+
+#5
+Public API = Open API = JSON Generate
+https://github.com/toddmotto/public-apis
+https://github.com/farizdotid/DAFTAR-API-LOKAL-INDONESIA
+https://www.omdbapi.com/
+https://apilayer.com/marketplace?utm_source=any-api&utm_medium=any-api-redirection&utm_campaign=any-api-redirection
+
+
+APIKEY Sandika Galih :
+dca61bcc
+
+tes dengan postman
+https://www.omdbapi.com/
+
+GET
+params
+Key = apikey
+Value = dca61bcc
+
+Tanpa otentikasi
+Key / Token = harus daftar dulu untuk dapat API KEY
+Oauth = authentikasi dengan sosmed (google, akun fb)
+
+https://www.namawebsite.com/?apikey=xxxxxx
+jika berhasil muncul data
+
+jika apikey salah
+{
+	"Response" : "False",
+	"Error" : "Invalid API Key!"
+}
+jika data yang diminta tidak ada
+{
+	"Response" : "False",
+	"Error" : "Data tidak ditemukan!"
+}
+
+pada file ambil data api atau reuest api tambahkan data apikeynya
+data
+gunakan dokumentasi untuk buat tampilan UInya
+
+#6 API Youtube , instagram
+skip
+
+#7 Membuat rest server sendiri
+setup codeigniter :
+pastikan semua file dari criskaserguis dicopy ke direktory ci kita
+
+buka vscode :
+- application/config/config.php
+1-config base url
+2-hapus index
+
+- application/config/autoload.php
+//3-load database
+$autoload['libraries'] = array('database');
+
+//4-load url
+$autoload['helper'] = array('url');
+
+- application/config/database.php
+//5-configurasi database
+
+buat database, dan table beserta isinya
+
+tes uji coba rest servernya jalan tidak
+
+
+arahkan ke controllers/api
+buat file baru Mahasiswa.php
+
+
+#8 authentikasi rest server
+
+
+
+CRUD CI3
+
+
+
+
+
+
+
+
+
+
