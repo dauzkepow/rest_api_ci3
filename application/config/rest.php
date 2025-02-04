@@ -29,6 +29,8 @@ $config['force_https'] = false;
 | 'xml':        Uses simplexml_load_string()
 |
 */
+
+//format output
 $config['rest_default_format'] = 'json';
 
 /*
@@ -110,7 +112,9 @@ $config['rest_realm'] = 'REST API';
 |           authorization key
 |
 */
-$config['rest_auth'] = false;
+//config auth ke basic
+//$config['rest_auth'] = false;
+$config['rest_auth'] = 'basic';
 
 /*
 |--------------------------------------------------------------------------
@@ -126,6 +130,7 @@ $config['rest_auth'] = false;
 | Note: If 'rest_auth' is set to 'session' then change 'auth_source' to the name of the session variable
 |
 */
+//config login source
 $config['auth_source'] = 'ldap';
 
 /*
@@ -299,6 +304,7 @@ $config['rest_database_group'] = 'default';
 | The table name in your database that stores API keys
 |
 */
+//tabel untuk menaruh keys
 $config['rest_keys_table'] = 'keys';
 
 /*
@@ -311,6 +317,7 @@ $config['rest_keys_table'] = 'keys';
 | column name see 'rest_key_column'
 |
 | Default table schema:
+//buat tabel keys
 |   CREATE TABLE `keys` (
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
 |       `user_id` INT(11) NOT NULL,
@@ -324,7 +331,9 @@ $config['rest_keys_table'] = 'keys';
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_keys'] = false;
+//aktifkan key = true
+//$config['rest_enable_keys'] = false;
+$config['rest_enable_keys'] = true;
 
 /*
 |--------------------------------------------------------------------------
@@ -335,6 +344,7 @@ $config['rest_enable_keys'] = false;
 | column name to match e.g. my_key
 |
 */
+//pengaturan kolom
 $config['rest_key_column'] = 'key';
 
 /*
@@ -364,6 +374,7 @@ $config['rest_limits_method'] = 'ROUTED_URL';
 | Note: The maximum length is 40
 |
 */
+//panjang key maksimum
 $config['rest_key_length'] = 40;
 
 /*
@@ -377,6 +388,7 @@ $config['rest_key_length'] = 40;
 | 2012/06/12. See RFC 6648 specification for more details
 |
 */
+//menentukan nama key
 $config['rest_key_name'] = 'X-API-KEY';
 
 /*
@@ -471,6 +483,7 @@ $config['rest_logs_json_params'] = false;
 | $this->method array in each controller
 |
 | Default table schema:
+//buat tabel limit
 |   CREATE TABLE `limits` (
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
 |       `uri` VARCHAR(255) NOT NULL,
@@ -482,13 +495,15 @@ $config['rest_logs_json_params'] = false;
 |
 | To specify the limits within the controller's __construct() method, add per-method
 | limits with:
-|
+|       
+        //limit per method (GET, POST, PUT, DELETE) per jam
 |       $this->methods['METHOD_NAME']['limit'] = [NUM_REQUESTS_PER_HOUR];
 |
 | See application/controllers/api/example.php for examples
 */
-$config['rest_enable_limits'] = false;
-
+//aktifkan config limit
+//$config['rest_enable_limits'] = false;
+$config['rest_enable_limits'] = true;
 /*
 |--------------------------------------------------------------------------
 | REST API Limits Table Name

@@ -14,6 +14,11 @@ class Mahasiswa extends REST_Controller
     {
         parent::__construct();
         $this->load->model('Mahasiswa_model', 'M_mahasiswa');
+
+        //taruh script limit di __contruct()
+        //limit per method (GET, POST, PUT, DELETE) per jam hanya 2 kali
+        $this->methods['index_get']['limit'] = 2; //method GET index_get()
+        $this->methods['index_delete']['limit'] = 2; //method DELETE index_delete()
     }
 
     //GET data
@@ -51,9 +56,10 @@ class Mahasiswa extends REST_Controller
         //test POSTMAN
         //GET
         //endpoint api
-        //Params
+        //jika menampilkan semua data = kosongkan Params
+        //jika menampilkan data berdasarkan id = dengan Params
         //KEY = id
-        //VALUE = 1
+        //VALUE = 1 (sesuaikan id user)
     }
 
     //DELETE Data

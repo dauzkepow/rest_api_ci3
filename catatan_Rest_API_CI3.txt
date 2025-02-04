@@ -327,6 +327,9 @@ gunakan dokumentasi untuk buat tampilan UInya
 skip
 
 #7 Membuat rest server sendiri
+CI 3.1.13 legacy
+library rest criskaserguis 3.0.3
+
 setup codeigniter :
 pastikan semua file dari criskaserguis dicopy ke direktory ci kita
 
@@ -355,6 +358,137 @@ buat file baru Mahasiswa.php
 
 
 #8 authentikasi rest server
+- tidak bisa sembarangan bisa diakses
+
+- Tambahkan KEY
+- application/config/rest.php
+//tabel untuk menaruh keys
+$config['rest_keys_table'] = 'keys';
+
+//aktifkan key = true
+//$config['rest_enable_keys'] = false;
+$config['rest_enable_keys'] = true;
+
+//pengaturan kolom
+$config['rest_key_column'] = 'key';
+
+//panjang key maksimum
+$config['rest_key_length'] = 40;
+
+//menentukan nama key
+$config['rest_key_name'] = 'X-API-KEY';
+
+//buat tabel keys
+   CREATE TABLE `keys` (
+       `id` INT(11) NOT NULL AUTO_INCREMENT,
+       `user_id` INT(11) NOT NULL,
+       `key` VARCHAR(40) NOT NULL,
+       `level` INT(2) NOT NULL,
+       `ignore_limits` TINYINT(1) NOT NULL DEFAULT '0',
+       `is_private_key` TINYINT(1)  NOT NULL DEFAULT '0',
+       `ip_addresses` TEXT NULL DEFAULT NULL,
+       `date_created` INT(11) NOT NULL,
+       PRIMARY KEY (`id`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+buka phpmyadmin
+DATABASE wpu_rest
+tab SQL
+pastekan
+GO 
+pastikan ada tabel baru = keys
+
+insert data baru ke tabel keys
+tidak bisa konek ke API tanpa KEY
+
+bisa untuk kelola data user
+harusnya digenerate otomatis misal registrasi
+
+ujicoba
+buka postman
+GET
+buka endpoints
+harusnya muncul invalid API Key
+
+jika ingin menampilkan data dengan keys :
+GET
+Endpoint API = http://namaendpoint.xxx
+Params
+KEY = X-API-KEY
+VALUE = wpu123 (sesuai yang dibuat di tabel keys)
+harusnya muncul datanya dengan format JSON
+jik APIKEY tidak sesuai maka = invalid API KEY 
+
+
+------
+ubah config $config['rest_enable_keys'] = true;
+tambah tabel keys
+masukkan key baru
+
+
+#Beri limit akses API
+- application/config/rest.php
+//aktifkan config limit
+//$config['rest_enable_limits'] = false;
+$config['rest_enable_limits'] = true;
+
+//buat tabel limit
+   CREATE TABLE `limits` (
+       `id` INT(11) NOT NULL AUTO_INCREMENT,
+       `uri` VARCHAR(255) NOT NULL,
+       `count` INT(10) NOT NULL,
+       `hour_started` INT(11) NOT NULL,
+       `api_key` VARCHAR(40) NOT NULL,
+       PRIMARY KEY (`id`)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+buka phpmyadmin
+DATABASE wpu_rest
+tab SQL
+pastekan
+GO 
+pastikan ada tabel baru = limits
+
+tulis limitnya di controllers di dalam __construct()
+rumusnya :
+//limit per method (GET, POST, PUT, DELETE) per jam
+   $this->methods['METHOD_NAME']['limit'] = [NUM_REQUESTS_PER_HOUR];
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Mahasiswa_model', 'M_mahasiswa');
+
+        //taruh script limit di __contruct()
+        //limit per method (GET, POST, PUT, DELETE) per jam hanya 2 kali
+       $this->methods['index_get']['limit'] = 2; //method GET index_get() bisa untuk POST, PUT, DELETE
+    }
+
+BUKA postman
+GET
+Endpoint API = http://namaendpoint.xxx
+Params
+KEY = X-API-KEY
+VALUE = wpu123 (sesuai yang dibuat di tabel keys)
+setelah 2 kali, yang ketiga terkena limit
+{
+    "status": false,
+    "error": "This API key has reached the time limit for this method"
+}
+Pastikan table limits sudah ada isinya
+
+#OTENTIKASI LOGIN
+- application/config/rest.php
+//config auth ke basic
+//$config['rest_auth'] = false;
+$config['rest_auth'] = 'basic';
+
+//config login source
+$config['auth_source'] = 'ldap';
+
+
+
 
 
 
