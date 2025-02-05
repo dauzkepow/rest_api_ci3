@@ -130,8 +130,9 @@ $config['rest_auth'] = 'basic';
 | Note: If 'rest_auth' is set to 'session' then change 'auth_source' to the name of the session variable
 |
 */
-//config login source
-$config['auth_source'] = 'ldap';
+//config login source kosongi 
+//$config['auth_source'] = 'ldap';
+$config['auth_source'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -216,7 +217,9 @@ $config['auth_library_function'] = '';
 | Array of usernames and passwords for login, if ldap is configured this is ignored
 |
 */
-$config['rest_valid_logins'] = ['admin' => '1234'];
+//Config valid Login
+//bisa dimodifikasi agar ambil dari database
+$config['rest_valid_logins'] = ['admin' => '1234', 'kepow' => 'qwerty'];
 
 /*
 |--------------------------------------------------------------------------

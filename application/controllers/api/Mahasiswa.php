@@ -17,7 +17,7 @@ class Mahasiswa extends REST_Controller
 
         //taruh script limit di __contruct()
         //limit per method (GET, POST, PUT, DELETE) per jam hanya 2 kali
-        $this->methods['index_get']['limit'] = 2; //method GET index_get()
+        $this->methods['index_get']['limit'] = 5; //method GET index_get()
         $this->methods['index_delete']['limit'] = 2; //method DELETE index_delete()
     }
 

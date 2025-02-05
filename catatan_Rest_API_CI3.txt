@@ -360,6 +360,7 @@ buat file baru Mahasiswa.php
 #8 authentikasi rest server
 - tidak bisa sembarangan bisa diakses
 
+#=== API KEY ===#
 - Tambahkan KEY
 - application/config/rest.php
 //tabel untuk menaruh keys
@@ -420,13 +421,13 @@ harusnya muncul datanya dengan format JSON
 jik APIKEY tidak sesuai maka = invalid API KEY 
 
 
-------
+--- kesimpulan ---
 ubah config $config['rest_enable_keys'] = true;
 tambah tabel keys
 masukkan key baru
 
 
-#Beri limit akses API
+#=== Beri limit akses API ===#
 - application/config/rest.php
 //aktifkan config limit
 //$config['rest_enable_limits'] = false;
@@ -455,6 +456,7 @@ rumusnya :
    $this->methods['METHOD_NAME']['limit'] = [NUM_REQUESTS_PER_HOUR];
 
 
+//buka application/controllers/api/Mahasiswa.php
     public function __construct()
     {
         parent::__construct();
@@ -471,29 +473,55 @@ Endpoint API = http://namaendpoint.xxx
 Params
 KEY = X-API-KEY
 VALUE = wpu123 (sesuai yang dibuat di tabel keys)
-setelah 2 kali, yang ketiga terkena limit
+setelah 2 kali masih bisa, akses API yang ketiga terkena limit
 {
     "status": false,
     "error": "This API key has reached the time limit for this method"
 }
-Pastikan table limits sudah ada isinya
+Pastikan table limits sudah ada isinya di tabel limits
 
-#OTENTIKASI LOGIN
+#=== OTENTIKASI LOGIN ===#
 - application/config/rest.php
 //config auth ke basic
 //$config['rest_auth'] = false;
 $config['rest_auth'] = 'basic';
 
-//config login source
-$config['auth_source'] = 'ldap';
+//config login source kosongi 
+//$config['auth_source'] = 'ldap';
+$config['auth_source'] = '';
 
+//Config valid Login
+//bisa dimodifikasi agar ambil dari database
+$config['rest_valid_logins'] = ['admin' => '1234', 'kepow' => 'qwerty'];
 
+Test postman method = GET
+harusnya keblokir 
+{
+    "status": false,
+    "error": "Unauthorized"
+}
 
+//agar bisa GET data REST API :
+GET
+Endpoint API = http://namaendpoint.xxx
+Params (jika perlu pakai API KEY)
+Authorization :
+ Type = Basic Auth
+ Username = admin (sesuai setingan config valid Login)
+ Password = 1234  (sesuai setingan config valid Login)
 
+Harusnya berhasil menampilkan data JSON
 
+jika salah user password muncul :
+{
+    "status": false,
+    "error": "Unauthorized"
+}
 
-CRUD CI3
-
+#Urutan lapis keamanan
+1. Authorization
+2. Limit
+3. Api key
 
 
 
